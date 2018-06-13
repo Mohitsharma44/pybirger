@@ -127,9 +127,13 @@ class Birger():
         Parse the output from the camera
         by filtering the padding and other sentinels
         """
-        print(output.split())
-        return output.split()
-
+        try:
+            resp = output.split()[-1]
+            return resp
+        except Exception as ex:
+            self.logger.error("The following error was returned: {}".format(output))
+            return False
+            
     @_checkTelnetConnection
     def _init_aperture(self):
         """
@@ -149,7 +153,7 @@ class Birger():
         """
         try:
             self.tn.write("lv".encode('ascii')+self.eof)
-            self.read(self.tn.read_until(self.eof, timeout=2))
+            return(self.read(self.tn.read_until(self.eof, timeout=2)))
         except Exception as ex:
             self.logger.warning("Cannot obtain version: "+ str(ex))
             
@@ -160,7 +164,7 @@ class Birger():
         """
         try:
             self.tn.write("sn".encode('ascii')+self.eof)
-            self.read(self.tn.read_until(self.eof, timeout=2))
+            return(self.read(self.tn.read_until(self.eof, timeout=2)))
         except Exception as ex:
             self.logger.warning("Cannot obtain serial number: "+ str(ex))
 
@@ -171,7 +175,7 @@ class Birger():
         """
         try:
             self.tn.write("pf".encode('ascii')+self.eof)
-            self.read(self.tn.read_until(self.eof, timeout=2))
+            return(self.read(self.tn.read_until(self.eof, timeout=2)))
         except Exception as ex:
             self.logger.warning("Cannot obtain focus: "+ str(ex))
 
@@ -191,7 +195,7 @@ class Birger():
                 self.tn.write("mz".encode('ascii')+self.eof)
             else:
                 self.tn.write("fa {}".format(abs_val).encode('ascii')+self.eof)
-            self.read(self.tn.read_until(self.eof, timeout=2))
+            return(self.read(self.tn.read_until(self.eof, timeout=2)))
         except Exception as ex:
             self.logger.warning("Cannot set focus: "+ str(ex))
     
@@ -202,7 +206,7 @@ class Birger():
         """
         try:
             self.tn.write("pa".encode('ascii')+self.eof)
-            self.read(self.tn.read_until(self.eof, timeout=2))
+            return(self.read(self.tn.read_until(self.eof, timeout=2)))
         except Exception as ex:
             self.logger.warning("Cannot obtain aperture: "+ str(ex))
     
@@ -222,7 +226,7 @@ class Birger():
                 self.tn.write("mc".encode('ascii')+self.eof)
             else:
                 self.tn.write("ma {}".format(abs_val).encode('ascii')+self.eof)
-            self.read(self.tn.read_until(self.eof, timeout=2))
+            return(self.read(self.tn.read_until(self.eof, timeout=2)))
         except Exception as ex:
             self.logger.warning("Cannot set aperture: "+ str(ex))
 
@@ -233,7 +237,7 @@ class Birger():
         """
         try:
             self.tn.write("lc".encode('ascii')+self.eof)
-            self.read(self.tn.read_until(self.eof, timeout=2))
+            return(self.read(self.tn.read_until(self.eof, timeout=2)))
         except Exception as ex:
             self.logger.warning("Cannot obtain extended lens information: "+ str(ex))
 
@@ -244,7 +248,7 @@ class Birger():
         """
         try:
             self.tn.write("lp".encode('ascii')+self.eof)
-            self.read(self.tn.read_until(self.eof, timeout=2))
+            return(self.read(self.tn.read_until(self.eof, timeout=2)))
         except Exception as ex:
             self.logger.warning("Cannot check if lens is present: "+ str(ex))
         
