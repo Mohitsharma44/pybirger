@@ -22,6 +22,7 @@ class Birger():
         self.eof = "\r\n".encode('ascii')
         self._openTelnet(self.TELNET_HOST, self.TELNET_PORT)
         self._init_aperture()
+        self._learn_focus()
         atexit.register(self.cleanup)
         
     def _openTelnet(self, host, port):
@@ -144,7 +145,18 @@ class Birger():
             self.read(self.tn.read_until(self.eof, timeout=2))
         except Exception as ex:
             self.logger.warning("Cannot initialize the aperture: "+ str(ex))
-        
+
+    @_checkTelnetConnection
+    def _learn_focus(self):
+        """
+        Learn absolute focus range
+        """
+        try:
+            self.tn.write("la".encode('ascii')+self.eof)
+            self.read(self.tn.read_until(self.eof, timeout=2))
+        except Exception as ex:
+            self.logger.warning("Error learning focus range: "+ str(ex))
+            
     @_checkTelnetConnection
     def version(self):
         """
